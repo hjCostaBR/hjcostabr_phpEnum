@@ -6,7 +6,7 @@ namespace hjcostabr\phpEnum;
  * Contains the methods to create the ENUM facility inside PHP.
  *
  * @namespace hjcostabr\phpEnum
- * @author: hjCostaBR
+ * @author hjCostaBR
  */
 trait EnumTrait {
 
