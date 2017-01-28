@@ -58,7 +58,7 @@ trait EnumTrait {
 
     /**
      * Define the enum items:
-     * Transform each enum property (array) into an instance of the defined enum items class.
+     * Transform each enum item configuration properties array into an enum item class instance.
      *
      * @return void
      * @throws EnumException
