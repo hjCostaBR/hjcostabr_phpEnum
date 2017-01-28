@@ -13,9 +13,7 @@ trait EnumTrait {
     /** @var array Enum items list. */
     private static $items;
 
-    /** @var bool Flag: Determines if this enum items have already been defined. */
-    private static $itemsSet   = false;
-    
+
     /**
      * Return list of enum class array properties for enum items configuration.
      * @return array
@@ -25,19 +23,19 @@ trait EnumTrait {
         // Get the class properties list
         $reflectionClass    = new \ReflectionClass(__CLASS__);
         $classProperties    = $reflectionClass->getProperties();
-        
+
         // Instantiate the return array
         $properties = [];
 
         // Fill returned properties array
         foreach ($classProperties as $classProperty) {
-            
+
             if ($classProperty->isPrivate() && !$classProperty->isStatic() ) {
                 $properties[]   = $classProperty->name;
                 continue;
             }
         }
-        
+
         return $properties;
     }
 
@@ -50,7 +48,7 @@ trait EnumTrait {
     private static function checkItemsSet()
     {
         // Check if this enum items are already set
-        if (self::$itemsSet) {
+        if (is_array(self::$items)) {
             return;
         }
 
@@ -104,9 +102,6 @@ trait EnumTrait {
 
         // Instantiate the enum items
         self::instantiateEnumItems($enumItemsProperties);
-
-        // Update the enum items definition status flag
-        self::$itemsSet   = TRUE;
     }
 
     /**
