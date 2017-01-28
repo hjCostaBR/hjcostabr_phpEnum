@@ -41,7 +41,6 @@ trait EnumTrait {
         return $properties;
     }
 
-
     /**
      * Check if this enum items have been set and, if not, set them.
      *
