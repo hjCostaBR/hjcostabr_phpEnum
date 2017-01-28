@@ -1,0 +1,21 @@
+{
+    "name": "hjCostaBR/phpEnum",
+    "type": "library",
+    "description": "PHP implementation for ENUM functionality",
+    "keywords": ["enum", "enumeration", "hjCostaBR"],
+    "homepage": "https://github.com/hjCostaBR/hjcostabr_phpEnum",
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "hjCostaBR",
+            "email": "hjcosta@outlook.com.br",
+            "homepage": "https://github.com/hjCostaBR",
+            "role": "Developer"
+        }
+    ],
+
+    "require": {
+        "php": ">=7.0.0"
+    }
+}

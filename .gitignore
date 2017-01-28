@@ -1,0 +1,23 @@
+#-------------------------
+# -- metadata de IDE's ---
+#-------------------------
+
+#-- PHPStorm -------------
+.idea/
+#-- NetBeans -------------
+/nbproject/
+#-- Sublime --------------
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+
+#-------------------------
+# -- dinamicos -----------
+#-------------------------
+.DS_Store
+node_modules/
+.sass-cache/
+**/*.map
