@@ -32,7 +32,6 @@ trait EnumTrait {
 
             if ($classProperty->isPrivate() && !$classProperty->isStatic() ) {
                 $properties[]   = $classProperty->name;
-                continue;
             }
         }
 
