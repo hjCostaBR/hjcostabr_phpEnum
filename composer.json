@@ -1,5 +1,5 @@
 {
-    "name": "hjCostaBR/phpEnum",
+    "name": "hjcostabr/php-enum",
     "type": "library",
     "description": "PHP implementation for ENUM functionality",
     "keywords": ["enum", "enumeration", "hjCostaBR"],
