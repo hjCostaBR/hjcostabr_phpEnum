@@ -17,5 +17,11 @@
 
     "require": {
         "php": ">=7.0.0"
+    },
+
+    "autoloader": {
+        "psr-4": {
+            "hjcostabr\\": "src/"
+        }
     }
 }
