@@ -3,12 +3,12 @@
 namespace hjcostabr\phpEnum;
 
 /**
- * Contains the methods to apply an Enum item logic.
+ * Contains the methods to apply an Enum element logic.
  *
  * @namespace hjcostabr\phpEnum
  * @author hjCostaBR
  */
-class EnumItem {
+class EnumElement {
 
     /** @var array List of the enum item properties. */
     private $properties;
@@ -17,14 +17,14 @@ class EnumItem {
     /**
      * Constructor.
      *
-     * @param array $properties Items code.
+     * @param array $properties Element data.
      * @throws EnumException;
      */
     public function __construct(array $properties)
     {
-        // Validate code required parameter
+        // Validate required parameter: `code`
         if (!(isset($properties["code"]) && is_numeric($properties["code"]) && $properties["code"] >= 0)) {
-            throw new EnumException("Enum item code not defined", EnumException::CODE_NOT_DEFINED, __FILE__, __LINE__);
+            throw new EnumException("Enum element code not defined", EnumException::CODE_NOT_DEFINED, __FILE__, __LINE__);
         }
 
         // Define enum item properties
@@ -34,7 +34,7 @@ class EnumItem {
 
     /**
      * -- MAGIC METHOD --
-     * Return an item property.
+     * Return an element property value.
      *
      * @param string $name Name of the property to return;
      * @return mixed
@@ -44,7 +44,7 @@ class EnumItem {
     {
         // Validate if the requested property exists
         if (!isset($this->properties[$name])) {
-            throw new EnumException("Item not found", EnumException::ITEM_NOT_FOUND, __FILE__, __LINE__);
+            throw new EnumException("Element not found", EnumException::ELEMENT_NOT_FOUND, __FILE__, __LINE__);
         }
 
         return $this->properties[$name];

@@ -10,9 +10,9 @@ namespace hjcostabr\phpEnum;
  */
 class EnumException extends \Exception
 {
-    const INVALID_ENUM_ITEM_PROPERTY    = 1;
+    const INVALID_ENUM_ELEMENT_PROPERTY = 1;
     const CODE_NOT_DEFINED              = 2;
-    const ITEM_NOT_FOUND                = 3;
+    const ELEMENT_NOT_FOUND             = 3;
 
     /**
      * EnumException constructor.
