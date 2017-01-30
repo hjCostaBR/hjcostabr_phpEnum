@@ -5,6 +5,7 @@
     "keywords": ["enum", "enumeration", "hjCostaBR"],
     "homepage": "https://github.com/hjCostaBR/hjcostabr_phpEnum",
     "license": "MIT",
+    "minimum-stability": "stable",
 
     "authors": [
         {
