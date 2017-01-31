@@ -22,7 +22,7 @@
 
     "autoloader": {
         "psr-4": {
-            "hjcostabr\\": ""
+            "hjcostabr\\phpEnum\\": "src/"
         }
     }
 }
