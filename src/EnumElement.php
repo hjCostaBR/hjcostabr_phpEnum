@@ -10,7 +10,7 @@ namespace hjcostabr\phpEnum;
  */
 class EnumElement {
 
-    /** @var array List of the enum item properties. */
+    /** @var array List of enum element properties. */
     private $properties;
 
 
@@ -27,7 +27,7 @@ class EnumElement {
             throw new EnumException("Enum element code not defined", EnumException::CODE_NOT_DEFINED, __FILE__, __LINE__);
         }
 
-        // Define enum item properties
+        // Define enum element properties
         $this->properties   = $properties;
     }
 
@@ -42,7 +42,6 @@ class EnumElement {
      */
     public function __get(string $name)
     {
-        // Validate if the requested property exists
         if (!isset($this->properties[$name])) {
             throw new EnumException("Element not found", EnumException::ELEMENT_NOT_FOUND, __FILE__, __LINE__);
         }
