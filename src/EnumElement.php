@@ -22,13 +22,11 @@ class EnumElement {
      */
     public function __construct(array $properties)
     {
-        // Validate required parameter: `code`
         if (!(isset($properties["code"]) && is_numeric($properties["code"]) && $properties["code"] >= 0)) {
             throw new EnumException("Enum element code not defined", EnumException::CODE_NOT_DEFINED, __FILE__, __LINE__);
         }
 
-        // Define enum element properties
-        $this->properties   = $properties;
+        $this->properties = $properties;
     }
 
 
