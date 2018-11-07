@@ -6,7 +6,7 @@ namespace hjcostabr\phpEnum;
  * Contains the methods to create the ENUM facility inside PHP.
  *
  * @namespace hjcostabr\phpEnum
- * @author hjCostaBR
+ * @author hjcostabr
  */
 trait EnumTrait {
 
@@ -22,10 +22,7 @@ trait EnumTrait {
      */
     private static function checkElementsSet()
     {
-        if (is_array(self::$elements)) {
-            return;
-        }
-
+        if (is_array(self::$elements)) return;
         self::setElements();
     }
 
@@ -38,25 +35,24 @@ trait EnumTrait {
      */
     private static function setElements()
     {
-        // Get list of the enum class properties
+        // Get enum class properties
         $enumProperties = get_class_vars(__CLASS__);
 
-        // Get list of enum class constants
-        $reflection     = new \ReflectionClass(__CLASS__);
-        $enumConstants  = $reflection->getConstants();
+        // Get enum class constants
+        $reflection = new \ReflectionClass(__CLASS__);
+        $enumConstants = $reflection->getConstants();
 
-        // Get list of enum class array properties for enum elements configuration
-        $enumElementsConfigurationProperties    = self::getEnumElementsConfigurationProperties();
-
-        // Instantiate list of enum element class array properties to be transformed into enum element instances
-        $enumElementsProperties = [];
+        // Get enum elements configuration
+        $enumElementsConfigurationProperties = self::getEnumElementsConfigurationProperties();
 
         // Build list of enum elements properties
+        $enumElementsProperties = [];
+
         foreach ($enumConstants as $enumConstantName=>$enumConstantValue) {
 
-            $value  = [];
+            $value = [];
 
-            // Validate enum element configuration array property (if necessary)
+            // Validate configuration array (if necessary)
             if (in_array($enumConstantName, $enumElementsConfigurationProperties)) {
 
                 if (!is_array($enumProperties[$enumConstantName])) {
@@ -64,12 +60,12 @@ trait EnumTrait {
                 }
 
                 // Set element configuration values array
-                $value  = $enumProperties[$enumConstantName];
+                $value = $enumProperties[$enumConstantName];
             }
 
             // Set prepared enum element configuration array property
-            $value["code"]  = $enumConstantValue;
-            $enumElementsProperties[]  = $value;
+            $value["code"] = $enumConstantValue;
+            $enumElementsProperties[] = $value;
         }
 
         // Instantiate enum elements
@@ -83,15 +79,15 @@ trait EnumTrait {
     private static function getEnumElementsConfigurationProperties()
     {
         // Get class properties list
-        $reflectionClass    = new \ReflectionClass(__CLASS__);
-        $classProperties    = $reflectionClass->getProperties();
+        $reflectionClass = new \ReflectionClass(__CLASS__);
+        $classProperties = $reflectionClass->getProperties();
         
         $properties = [];
         
         // Fill returned properties array
         foreach ($classProperties as $classProperty) {
-            if ($classProperty->isPrivate() && !$classProperty->isStatic() ) {
-                $properties[]   = $classProperty->name;
+            if ($classProperty->isPrivate() && !$classProperty->isStatic()) {
+                $properties[] = $classProperty->name;
             }
         }
         
@@ -109,42 +105,25 @@ trait EnumTrait {
     {
         // Check if is there a list to validate
         if (count($enumElementsProperties) == 1) {
-            self::$elements[ $enumElementsProperties[0]["code"] ] = new EnumElement($enumElementsProperties[0]);
+            self::$elements[$enumElementsProperties[0]["code"]] = new EnumElement($enumElementsProperties[0]);
             return;
         }
 
+        $elementsProperties = [];       // Enum element properties (every element must have the same properties)
+        $elementsPropertyValues = [];   // Enum elements defined values for each of its properties
 
-        /*===============================================================================*/
-        /*== Prepare lists for validation ===============================================*/
-
-        // List of enum element properties (every enum element must have exactly the same properties)
-        $elementsProperties    = [];
-
-        // List of the enum elements defined values for each of its properties
-        $elementsPropertyValues = [];
-
-
-        /*===============================================================================*/
-        /*== Read the first enum element to define the validation rules for the others ==*/
-
-        // Instantiate first enum element
-        self::$elements[ $enumElementsProperties[0]["code"] ]  = new EnumElement($enumElementsProperties[0]);
+        // Define validation rules for all elements according to the format of the first element
+        self::$elements[$enumElementsProperties[0]["code"]] = new EnumElement($enumElementsProperties[0]);
 
         foreach ($enumElementsProperties[0] as $elementPropertyName=>$elementPropertyValue) {
-
-            // Add enum element property name
-            $elementsProperties[]  = $elementPropertyName;
-
-            // Add defined enum element property value
-            $elementsPropertyValues[$elementPropertyName][]   = $elementPropertyValue;
+            $elementsProperties[] = $elementPropertyName;
+            $elementsPropertyValues[$elementPropertyName][] = $elementPropertyValue;
         }
 
 
-        /*===============================================================================*/
-        /*== Validate each one of the other enum elements ===============================*/
+        // Instantiate enum elements
         for ($i = 1; $i < count($enumElementsProperties); $i++) {
 
-            // Validate enum element properties
             foreach ($elementsProperties as $elementsProperty) {
                 if (!isset($enumElementsProperties[$i][$elementsProperty])
                     || in_array($enumElementsProperties[$i][$elementsProperty], $elementsPropertyValues[$elementsProperty])
@@ -153,8 +132,7 @@ trait EnumTrait {
                 }
             }
 
-            // Instantiate enum element
-            self::$elements[ $enumElementsProperties[$i]["code"] ]  = new EnumElement($enumElementsProperties[$i]);
+            self::$elements[$enumElementsProperties[$i]["code"]] = new EnumElement($enumElementsProperties[$i]);
         }
     }
 
