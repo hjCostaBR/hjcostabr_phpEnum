@@ -9,23 +9,23 @@ namespace hjcostabr\phpEnum;
  * @author hjcostabr
  */
 trait EnumTrait {
-
+    
     /** @var array Enum elements list. */
     private static $elements;
-
-
+    
+    
     /**
      * Check if this enum elements have been set and, if not, set them.
      *
      * @return void
      * @throws EnumException
      */
-    private static function checkElementsSet()
+    private static function checkElementsSet(): void
     {
         if (is_array(self::$elements)) return;
         self::setElements();
     }
-
+    
     /**
      * Define the enum elements:
      * Transform each enum element configuration properties array into an enum element class instance.
@@ -33,43 +33,38 @@ trait EnumTrait {
      * @return void
      * @throws EnumException
      */
-    private static function setElements()
+    private static function setElements(): void
     {
-        // Get enum class properties
+        // Get enum elements config parameters
         $enumProperties = get_class_vars(__CLASS__);
-
-        // Get enum class constants
         $reflection = new \ReflectionClass(__CLASS__);
         $enumConstants = $reflection->getConstants();
-
-        // Get enum elements configuration
-        $enumElementsConfigurationProperties = self::getEnumElementsConfigurationProperties();
-
+        $enumElementsConfigProps = self::getEnumElementsConfigurationProperties();
+        
         // Build list of enum elements properties
-        $enumElementsProperties = [];
-
-        foreach ($enumConstants as $enumConstantName=>$enumConstantValue) {
-
+        $enumElementsProps = [];
+        
+        foreach ($enumConstants as $enumConstantName => $enumConstantValue) {
+            
             $value = [];
-
+            
             // Validate configuration array (if necessary)
-            if (in_array($enumConstantName, $enumElementsConfigurationProperties)) {
-
-                if (!is_array($enumProperties[$enumConstantName])) {
+            if (in_array($enumConstantName, $enumElementsConfigProps)) {
+                
+                if (!is_array($enumProperties[$enumConstantName]))
                     throw new EnumException("Invalid enum element array property: '$enumConstantName' in '".__CLASS__."'", EnumException::INVALID_ENUM_ELEMENT_PROPERTY, __FILE__, __LINE__);
-                }
-
+                
                 // Set element configuration values array
                 $value = $enumProperties[$enumConstantName];
             }
-
+            
             // Set prepared enum element configuration array property
-            $value["code"] = $enumConstantValue;
-            $enumElementsProperties[] = $value;
+            $value['id'] = $enumConstantValue;
+            $enumElementsProps[] = $value;
         }
-
+        
         // Instantiate enum elements
-        self::instantiateEnumElements($enumElementsProperties);
+        self::instantiateEnumElements($enumElementsProps);
     }
     
     /**
@@ -78,87 +73,86 @@ trait EnumTrait {
      */
     private static function getEnumElementsConfigurationProperties()
     {
-        // Get class properties list
         $reflectionClass = new \ReflectionClass(__CLASS__);
         $classProperties = $reflectionClass->getProperties();
         
         $properties = [];
         
-        // Fill returned properties array
         foreach ($classProperties as $classProperty) {
-            if ($classProperty->isPrivate() && !$classProperty->isStatic()) {
+            if ($classProperty->isPrivate() && !$classProperty->isStatic())
                 $properties[] = $classProperty->name;
-            }
         }
         
         return $properties;
     }
-
+    
     /**
      * Validate enum elements configuration array properties list and instantiate enum elements.
      *
-     * @param array $enumElementsProperties List of enum elements array properties witch are supposed to be valid enum elements configuration data.
+     * @param array $enumElementsProps List of enum elements array properties witch are supposed to be valid enum elements configuration data.
      * @return void
      * @throws EnumException
      */
-    private static function instantiateEnumElements(array $enumElementsProperties)
+    private static function instantiateEnumElements(array $enumElementsProps): void
     {
         // Check if is there a list to validate
-        if (count($enumElementsProperties) == 1) {
-            self::$elements[$enumElementsProperties[0]["code"]] = new EnumElement($enumElementsProperties[0]);
+        if (count($enumElementsProps) == 1) {
+            self::$elements[$enumElementsProps[0]['id']] = new EnumElement($enumElementsProps[0]);
             return;
         }
-
+        
         $elementsProperties = [];       // Enum element properties (every element must have the same properties)
         $elementsPropertyValues = [];   // Enum elements defined values for each of its properties
-
+        
         // Define validation rules for all elements according to the format of the first element
-        self::$elements[$enumElementsProperties[0]["code"]] = new EnumElement($enumElementsProperties[0]);
-
-        foreach ($enumElementsProperties[0] as $elementPropertyName=>$elementPropertyValue) {
+        self::$elements[$enumElementsProps[0]['id']] = new EnumElement($enumElementsProps[0]);
+        
+        foreach ($enumElementsProps[0] as $elementPropertyName => $elementPropertyValue) {
             $elementsProperties[] = $elementPropertyName;
             $elementsPropertyValues[$elementPropertyName][] = $elementPropertyValue;
         }
-
-
+        
         // Instantiate enum elements
-        for ($i = 1; $i < count($enumElementsProperties); $i++) {
-
+        for ($i = 1; $i < count($enumElementsProps); $i++) {
+            
             foreach ($elementsProperties as $elementsProperty) {
-                if (!isset($enumElementsProperties[$i][$elementsProperty])
-                    || in_array($enumElementsProperties[$i][$elementsProperty], $elementsPropertyValues[$elementsProperty])
+                if (!isset($enumElementsProps[$i][$elementsProperty])
+                    || in_array($enumElementsProps[$i][$elementsProperty], $elementsPropertyValues[$elementsProperty])
                 ) {
                     throw new EnumException("Enum element configuration arrays are not properly defined in '".__CLASS__."''", EnumException::INVALID_ENUM_ELEMENT_PROPERTY, __FILE__, __LINE__);
                 }
             }
-
-            self::$elements[$enumElementsProperties[$i]["code"]] = new EnumElement($enumElementsProperties[$i]);
+            
+            self::$elements[$enumElementsProps[$i]['id']] = new EnumElement($enumElementsProps[$i]);
         }
     }
-
-
+    
+    
     /**
      * Return enum element found by its reference (value of enum class constant related to the requested element).
      *
-     * @param int $elementReference Requested element code.
+     * @param mixed $elementReference Requested element code.
      * @return EnumElement
+     * @throws EnumException
      */
-    public static function get(int $elementReference)
+    public static function get($elementReference): EnumElement
     {
         self::checkElementsSet();
         return isset(self::$elements[$elementReference]) ? self::$elements[$elementReference] : null;
     }
-
+    
     /**
      * Return the list of all enum elements.
+     *
      * @return array
+     * @throws EnumException
      */
-    public static function getList()
+    public static function getList(): array
     {
         self::checkElementsSet();
         return self::$elements;
     }
-
+    
     /**
      * Return an enum element found by the value of one property.
      *
@@ -168,14 +162,13 @@ trait EnumTrait {
      * @return EnumElement
      * @throws EnumException
      */
-    public static function getBy(string $propertyName, $propertyValue)
+    public static function getBy(string $propertyName, $propertyValue): EnumElement
     {
         self::checkElementsSet();
-
+        
         foreach (self::$elements as $item) {
-            if ($item->{$propertyName} == $propertyValue) {
+            if ($item->{$propertyName} == $propertyValue)
                 return $item;
-            }
         }
     }
 }

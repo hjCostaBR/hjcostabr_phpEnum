@@ -9,11 +9,10 @@ namespace hjcostabr\phpEnum;
  * @author hjCostaBR
  */
 class EnumElement {
-
+    
     /** @var array List of enum element properties. */
     private $properties;
-
-
+    
     /**
      * Constructor.
      *
@@ -22,14 +21,13 @@ class EnumElement {
      */
     public function __construct(array $properties)
     {
-        if (!(isset($properties["code"]) && is_numeric($properties["code"]) && $properties["code"] >= 0)) {
-            throw new EnumException("Enum element code not defined", EnumException::CODE_NOT_DEFINED, __FILE__, __LINE__);
-        }
-
+        if (!isset($properties['id']))
+            throw new EnumException("Enum element id not defined", EnumException::CODE_NOT_DEFINED, __FILE__, __LINE__);
+        
         $this->properties = $properties;
     }
-
-
+    
+    
     /**
      * -- MAGIC METHOD --
      * Return an element property value.
@@ -40,10 +38,7 @@ class EnumElement {
      */
     public function __get(string $name)
     {
-        if (!isset($this->properties[$name])) {
-            throw new EnumException("Element not found", EnumException::ELEMENT_NOT_FOUND, __FILE__, __LINE__);
-        }
-
-        return $this->properties[$name];
+        if (!!isset($this->properties[$name])) return $this->properties[$name];
+        throw new EnumException("Element not found", EnumException::ELEMENT_NOT_FOUND, __FILE__, __LINE__);
     }
 }
