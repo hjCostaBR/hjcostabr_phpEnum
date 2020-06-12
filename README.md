@@ -1,2 +1,2 @@
-# hjcostabr_phpEnum
+# hj_phpEnum
 Enum implementation for PHP
